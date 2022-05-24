@@ -1,68 +1,52 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
-const db = require('../db.js');
-
-const seats = db.seats;
+const { v4: uuidv4 } = require('uuid');
+const db = require('../db');
 
 router.route('/seats').get((req, res) => {
-	res.send(seats);
+	res.json(db.seats);
 });
 
 router.route('/seats/:id').get((req, res) => {
-	const currentUser = seats.find(user => user.id == req.params.id);
-	if (currentUser) {
-		res.send(currentUser);
-	} else if (req.params.id === 'random') {
-		const item = seats[Math.floor(Math.random() * seats.length)];
-		res.send(item);
-	} else {
-		res.send(`<h3>No user with id = ${req.params.id}</h3>`);
-	}
+	res.json(db.seats.filter(item => item.id == req.params.id));
 });
 
 router.route('/seats').post((req, res) => {
 	const { day, seat, client, email } = req.body;
-	if (day && seat && client && email) {
-		const newSeat = {
-			id: uuidv4(),
-			day: day,
-			seat: seat,
-			client: client,
-			email: email,
-		};
-		seats.push(newSeat);
-		res.send({ message: 'OK' });
-	} else {
-		res.send({ message: 'ERROR' });
-	}
-});
+	const isTaken = db.seats.some(
+		dbSeat => dbSeat.day === day && dbSeat.seat === seat
+	);
+	console.log(isTaken);
 
-router.route('/seats/:id').put((req, res) => {
-	const { day, seat, client, email } = req.body;
-	const updatedSeat = seats.find(seat => seat.id == req.params.id);
-	if (newSeat) {
-		updatedSeat.day = day;
-		updatedSeat.seat = seat;
-		updatedSeat.client = client;
-		updatedSeat.email = email;
-		res.send({ message: 'OK' });
+	if (!isTaken) {
+		db.seats.push({ id: uuidv4(), day, seat, client, email });
 	} else {
-		res.send({ message: 'ERROR' });
+		res.status(200).json({
+			message: 'added',
+			data: db.seats,
+		});
 	}
 });
 
 router.route('/seats/:id').delete((req, res) => {
-	const seat = seats.find(seat => seat.id == req.params.id);
-	if (seat) {
-		const props = Object.getOwnPropertyNames(seat);
-		for (let i = 0; i < props.length; i++) {
-			delete seat[props[i]];
-		}
-		res.send({ message: 'OK' });
-	} else {
-		res.send({ message: 'ERROR' });
-	}
+	const deletedSeats = db.seats.filter(item => item.id === req.params.id);
+	const indexOfSeats = db.seats.indexOf(deletedSeats);
+	db.seats.splice(indexOfSeats, 1);
+	return res.json({ message: 'OK' });
+});
+
+router.route('/seats/:id').put((req, res) => {
+	const editedSeats = db.seats.filter(item => item.id === req.params.id);
+	const indexOfSeats = db.seats.filter(item => item.id === req.params.id);
+	const newSeats = {
+		...editedSeats,
+		day: req.body.day,
+		seat: req.body.seat,
+		client: req.body.client,
+		email: req.body.email,
+	};
+	db.seats[indexOfSeats] = newSeats;
+	return res.json({ message: 'OK' });
 });
 
 module.exports = router;
