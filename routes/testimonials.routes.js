@@ -7,13 +7,13 @@ router.route('/testimonials').get((req, res) => {
 	res.json(db.testimonials);
 });
 
-router.route('/testimonials/:id').get((req, res) => {
-	res.json(db.testimonials.filter(item => item.id == req.params.id));
-});
-
 router.route('/testimonials/random').get((req, res) => {
 	let item = db.testimonials[Math.floor(Math.random() * db.length)];
 	res.json(item);
+});
+
+router.route('/testimonials/:id').get((req, res) => {
+	res.json(db.testimonials.filter(item => item.id == req.params.id));
 });
 
 router.route('/testimonials').post((req, res) => {
