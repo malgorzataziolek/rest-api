@@ -48,7 +48,7 @@ class OrderTicketForm extends React.Component {
 
 	submitForm = async e => {
 		const { order } = this.state;
-		const { addSeat, loadSeats } = this.props;
+		const { addSeat } = this.props;
 
 		e.preventDefault();
 
@@ -63,7 +63,6 @@ class OrderTicketForm extends React.Component {
 
 			if (!isTaken()) {
 				await addSeat(order);
-				loadSeats();
 				this.setState({
 					order: {
 						client: '',

@@ -3,6 +3,7 @@ import {
 	getSeats,
 	getRequests,
 	loadSeatsRequest,
+	loadSeats,
 } from '../../../redux/seatsRedux';
 import SeatChooser from './SeatChooser';
 
@@ -13,6 +14,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	loadSeats: () => dispatch(loadSeatsRequest()),
+	seatsUpdated: seats => dispatch(loadSeats(seats)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SeatChooser);
