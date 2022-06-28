@@ -48,10 +48,10 @@ io.on('connection', socket => {
 	});
 });
 
-mongoClient.connect(
-	'mongodb+srv://gosiaziolek:gosiaziolek@atlascluster.fsyhl.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect(
+	'mongodb+srv://gosiaziolek:gosiaziolek@atlascluster.fsyhl.mongodb.net/NewWaveDB?retryWrites=true&w=majority',
 	{
-		useNewUrlParser: true,
+		useNewUrlParser: false,
 		useUnifiedTopology: true,
 	}
 );
