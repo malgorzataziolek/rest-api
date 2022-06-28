@@ -48,10 +48,13 @@ io.on('connection', socket => {
 	});
 });
 
-mongoClient.connect('mongodb://localhost:27017/NewWaveDB', {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-});
+mongoClient.connect(
+	'mongodb+srv://gosiaziolek:gosiaziolek@atlascluster.fsyhl.mongodb.net/?retryWrites=true&w=majority',
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	}
+);
 
 const db = mongoose.connection;
 
